@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var dao = require('../db/Dao');
-var setHead = require('../config/headConfig');
+var setHead = require('../config/HeadConfig');
 
 // 响应一个JSON数据
 var responseJSON = function (res, ret) {
@@ -49,6 +49,7 @@ router.post('/getBook', function(req, res, next){
         });
     
 });
+
 // 获取书籍
 router.post('/getChapter', function(req, res, next){
      // 设置跨域请求

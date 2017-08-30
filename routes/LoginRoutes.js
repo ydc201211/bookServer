@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var dao = require('../db/Dao');
-var setHead = require('../config/headConfig');
+var setHead = require('../config/HeadConfig');
 
 // 响应一个JSON数据
 var responseJSON = function (res, ret) {
@@ -16,11 +16,11 @@ var responseJSON = function (res, ret) {
 }};
 
 // 获取用户
-router.get('/getUser', function(req, res, next){
+router.get('/login', function(req, res, next){
     
     //获取前台参数
     var param = req.query || req.params;   
-           
+    
     //执行获取user方法
     dao('SELECT * FROM users where 1=1',function(err, result){
             
@@ -43,5 +43,5 @@ router.get('/getUser', function(req, res, next){
         }     
     });
 });
-   
+
 module.exports = router;
