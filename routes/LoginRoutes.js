@@ -1,47 +1,75 @@
 var express = require('express');
 var router = express.Router();
-var dao = require('../db/Dao');
 var setHead = require('../config/HeadConfig');
+var cookieUtil = require('../util/CookieUtil');
+var userService = require('../service/UserService');
 
 // 响应一个JSON数据
 var responseJSON = function (res, ret) {
-  if(typeof ret === 'undefined') { 
-      res.json({  
-          code:'-200', 
-          msg: '操作失败'   
-      }); 
-  } else {
-      
-      res.json(ret);
-}};
+    if(typeof ret === 'undefined') { 
+        res.json({  
+            code:'-200', 
+            msg: '操作失败'   
+        }); 
+       
+    } else {
+        res.json(ret);
+        
+    }
+};
 
-// 获取用户
-router.get('/login', function(req, res, next){
-    
-    //获取前台参数
-    var param = req.query || req.params;   
-    
-    //执行获取user方法
-    dao('SELECT * FROM users where 1=1',function(err, result){
-            
-        if(result) {      
-            var s_data = {
-                total:result.length,
-                rows:result,
-                msg:'获取用户数据成功',
-                code:'1001'
-            }
-            responseJSON(res, s_data);   
+// 登录
+router.post('/login', function(req, res, next){
+
+    var cookieValue = cookieUtil.getCookie("book.download.com",req.headers.cookie);
+    var username = '';
+    if(cookieValue != '' && cookieValue != undefined){
+        username = cookieUtil.readCookie(cookieValue);
+        if(username != ''){
+            userService.getUserByAccount(username,function(ret){
+                req.session.user = ret.obj;
+                responseJSON(res,ret);
+            });
         }else{
-            var f_data = {
-                total:result.length,
-                rows:result,
-                msg:'获取用户数据失败',
-                code:'1000'
-            }
-            console.log(err);
-        }     
-    });
+            responseJSON(res,{
+                msg: '登录失败',
+                code: '999'
+            });
+        }
+    }else {
+        var username = req.body.username;
+        var password = req.body.password;
+        if(username != '' && username != undefined){
+            userService.getUserByAccount(username,function(ret){
+                if(ret.code === '1001'){
+                    userService.validateUser(username,password,function(ret){
+                        if(ret.code === '1001'){
+                            
+                            req.session.user = ret.obj;
+                            res = setHead('login_success',res,ret);
+                            // console.log(req.session);
+                            // res.send(req.session.user = ret.obj);
+                            // res.end();
+                            responseJSON(res,ret);
+                        }else{
+                            res = setHead('login_fail',res,ret);
+                            responseJSON(res,ret);
+                        }
+                    });
+                }else{
+                    res = setHead('login_fail',res,ret);
+                    responseJSON(res,ret);
+                }
+            });
+        }else{
+            res = setHead('login_fail',res,ret);
+            responseJSON(res,{
+                code:'1000',
+                msg:'用户名不能为空'
+            });
+        }
+    }
+    
 });
 
 module.exports = router;
