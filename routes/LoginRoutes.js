@@ -19,18 +19,22 @@ var responseJSON = function (res, ret) {
 };
 
 // 登录
-router.post('/login', function(req, res, next){
+router.post('/login',function(req, res, next){
 
-    var cookieValue = cookieUtil.getCookie("book.download.com",req.headers.cookie);
+    var cookieValue = cookieUtil.getCookie('book.download.com',req.headers.cookie);
     var username = '';
+    
     if(cookieValue != '' && cookieValue != undefined){
+        
         username = cookieUtil.readCookie(cookieValue);
         if(username != ''){
             userService.getUserByAccount(username,function(ret){
-                req.session.user = ret.obj;
+            
+                res = setHead('login_success',res,ret);
                 responseJSON(res,ret);
             });
         }else{
+            res = setHead('login_fail',res,ret);
             responseJSON(res,{
                 msg: '登录失败',
                 code: '999'
@@ -44,8 +48,6 @@ router.post('/login', function(req, res, next){
                 if(ret.code === '1001'){
                     userService.validateUser(username,password,function(ret){
                         if(ret.code === '1001'){
-                            
-                            req.session.user = ret.obj;
                             res = setHead('login_success',res,ret);
                             // console.log(req.session);
                             // res.send(req.session.user = ret.obj);
@@ -62,7 +64,8 @@ router.post('/login', function(req, res, next){
                 }
             });
         }else{
-            res = setHead('login_fail',res,ret);
+            
+            res = setHead('login_fail',res);
             responseJSON(res,{
                 code:'1000',
                 msg:'用户名不能为空'
