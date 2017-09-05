@@ -28,6 +28,7 @@ router.post('/getBook', function(req, res, next){
     var start = params.pageNumber - 1;
     var offset = params.pageSize;
     bookService.getAllBooksOfPage(start,offset,function(ret) {
+        res = setHead('CrossDomain',res);
         responseJSON(res,ret);
     }); 
     

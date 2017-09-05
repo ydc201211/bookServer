@@ -20,12 +20,12 @@ var responseJSON = function (res, ret) {
 
 // 登录
 router.post('/login',function(req, res, next){
-
+    
     var cookieValue = cookieUtil.getCookie('book.download.com',req.headers.cookie);
     var username = '';
     
     if(cookieValue != '' && cookieValue != undefined){
-        
+       
         username = cookieUtil.readCookie(cookieValue);
         if(username != ''){
             userService.getUserByAccount(username,function(ret){

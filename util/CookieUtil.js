@@ -7,16 +7,24 @@ class CookieUtil {
         
     }
     static readCookie(cookieStr) {
-        username = "";  
+       
+        var username = "";  
         var mystatickey = "HZKJ";
-        var sarr = cookieStr.split(":");  
+        var md5 = crypto.createHash('md5');
+        var sarr = cookieStr.split(":"); 
+       
         username = sarr[0];  
         var todaydate = formatDate(new Date());
         var cookiedate = sarr[2];    
         var valuetime = sarr[1];  
+        
         if( (parseInt(todaydate) - parseInt(cookiedate)) < parseInt(valuetime)) {
+            
             var md5str = sarr[0] + sarr[1] + sarr[2] + mystatickey;
+            console.log(md5str);
             md5str = md5.update(md5str).digest('hex'); //MD5加密  
+            console.log(md5str);
+            console.log(sarr[3]);
             if (md5str === sarr[3]){
                 return sarr[0];
             }else{
@@ -49,13 +57,8 @@ class CookieUtil {
                 cookies[parts[0].trim()] = (parts[1] || '').trim();
             });
         }
-        for (var i = 0; i < cookies.length; i++) {
-            if(coookies[i][0] === key){
-                cookieValue = coookies[i][0];
-            }
-        }
-
-        return cookieValue;
+       
+        return cookies[key];
     }
  
 }
