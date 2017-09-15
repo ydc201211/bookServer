@@ -15,24 +15,13 @@ var setHead = function(type,res,data){
         var timeObj = expireDate.toGMTString();
         
         res.header(
-            'Set-Cookie',['book.download.com='+ cookieUtil.createCookie(data.obj.username) +';path="/";Expires='+timeObj+';httpOnly=true',
+            'Set-Cookie',['book.download.com='+ cookieUtil.createLoginCookie(data.obj.username) +';path="/";Expires='+timeObj+';httpOnly=true',
             'logged_in=yes;path="/";Expires="";httpOnly=true']);
-        res.header("Access-Control-Allow-Credentials", true);
-        res.header("Access-Control-Allow-Origin", "http://localhost:8080");
-        res.header("Access-Control-Allow-Headers", "X-Requested-With");
-        res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-        res.header("X-Powered-By", ' 3.2.1');
-        res.header("Content-Type", "application/json;charset=utf-8");
+      
     }else if(type === 'login_fail'){
         res.header(
             'Set-Cookie','logged_in=no;path="/";Expires="";httpOnly=true'
         );
-        res.header("Access-Control-Allow-Credentials", true);
-        res.header("Access-Control-Allow-Origin", "http://localhost:8080");
-        res.header("Access-Control-Allow-Headers", "X-Requested-With");
-        res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-        res.header("X-Powered-By", ' 3.2.1');
-        res.header("Content-Type", "application/json;charset=utf-8");
     }
   
     return res;

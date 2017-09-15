@@ -6,7 +6,7 @@ class CookieUtil {
     constructor() {
         
     }
-    static readCookie(cookieStr) {
+    static readLoginCookie(cookieStr) {
        
         var username = "";  
         var mystatickey = "HZKJ";
@@ -37,7 +37,7 @@ class CookieUtil {
     }
    
 
-    static createCookie(username) {
+    static createLoginCookie(username) {
         var mystatickey = "HZKJ";
         var md5 = crypto.createHash('md5');
         var valuetime = 30;//暂时指定有效期为30天
