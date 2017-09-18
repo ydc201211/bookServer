@@ -20,10 +20,8 @@ var responseJSON = function (res, ret) {
 
 //用户登录
 router.post('/login',function(req, res, next){
-    
     var cookieValue = cookieUtil.getCookie('book.download.com',req.headers.cookie);
     var username = '';
-    
     if(cookieValue != '' && cookieValue != undefined){
        
         username = cookieUtil.readLoginCookie(cookieValue);
@@ -84,23 +82,25 @@ router.get('/background/login', function(req, res, next) {
 });
 
 //管理员登录
-router.post('/background/login',function(req, res, next){
-    
+router.post('/background/siginin',function(req, res, next){
     var username = req.body.username;
     var password = req.body.password;
     if(username != '' && username != undefined){
         userService.getUserByAccount(username,function(ret){
             if(ret.code === '1001'){
                 userService.validateUser(username,password,function(ret){
+                   
                     if(ret.code === '1001'){
                         res = setHead('login_success',res,ret);
                         // console.log(req.session);
                         // res.send(req.session.user = ret.obj);
                         // res.end();
-                        res.render('index', { 
+                        
+                        res.render('index1', { 
                             title: '首页', 
                             user: ret.obj
                         });
+                        
                     }else{
                         res = setHead('login_fail',res,ret);
                         responseJSON(res,ret);
@@ -121,4 +121,12 @@ router.post('/background/login',function(req, res, next){
     }
     
 });
+
+router.post('/index',function(req, res, next){
+    res.render('index', { 
+        title: '首页', 
+        user: ret.obj
+    });
+});
+
 module.exports = router;

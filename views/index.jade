@@ -1,6 +1,6 @@
 doctype html
-    html  
-        head
+html
+    head
         title= title
         meta(http-equiv="Content-Type",content="text/html",charset="UTF-8")
         link(rel="stylesheet", type="text/css", href="/public/assets/css/dpl-min.css")
@@ -41,24 +41,24 @@ doctype html
                 modulesConfig : config
                 });
             });
-        body
-            div.header
-                div.dl-title
-                div.dl-log 欢迎您，
-                    span.dl-log-user root
-                    a.dl-log-quit(href="/chinapost/index.php?m=Public&a=logout" title="退出系统" ) [退出]
-            div.content
-                div.dl-main-nav
-                    div.dl-inform
-                        div.dl-inform-title
-                            s.dl-inform-icon.dl-up
-                        
-                    ul#J_Nav.nav-list.ks-clear
-                        li.nav-item.dl-selected
-                            div.nav-item-inner.nav-home 系统管理
-                        li.nav-item.dl-selected
-                            div.nav-item-inner.nav-order 业务管理       
-                ul#J_NavContent.dl-tab-conten
-    
+    body
+        div.header
+            div.dl-title
+            div.dl-log 欢迎您，
+                span.dl-log-user #{user.username}
+                a.dl-log-quit(href="/chinapost/index.php?m=Public&a=logout" title="退出系统" ) [退出]
+        div.content
+            div.dl-main-nav
+                div.dl-inform
+                    div.dl-inform-title
+                        s.dl-inform-icon.dl-up
+                    
+                ul#J_Nav.nav-list.ks-clear
+                    li.nav-item.dl-selected
+                        div.nav-item-inner.nav-home 系统管理
+                    li.nav-item.dl-selected
+                        div.nav-item-inner.nav-order 业务管理       
+            ul#J_NavContent.dl-tab-conten
+
 
   
