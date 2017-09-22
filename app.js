@@ -15,16 +15,17 @@ var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.engine("html",require("ejs").__express); // or   app.engine("html",require("ejs").renderFile);
+app.set('view engine', 'html');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ 
-    extended: false 
-}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use('/public',express.static(path.join(__dirname, '/public')));
+app.use('/app',express.static(path.join(__dirname, '/app')));
 app.use(session({
   name:'bookdownload.com',
   secret: generateMixed(5),
@@ -33,43 +34,50 @@ app.use(session({
   saveUninitialized:false
 }));
 
-app.use('/public',express.static(path.join(__dirname, '/public')));
-app.use('/app',express.static(path.join(__dirname, '/app')));
-
+//设置路由
 app.use('/',index,login);
 app.use('/user', user);
 app.use('/book', book);
 
-// catch 404 and forward to error handler
+app.use(function(req,res,next){ 
+	res.locals.user = req.session.user;
+	var err = req.session.error;
+	delete req.session.error;
+	res.locals.message = "";
+	if(err){
+		res.locals.message = '<div class="alert alert-danger" style="margin-bottom:20px;color:red;">'+err+'</div>';
+	}
+	next();
+});
+
+//404错误处理
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
 
-// error handler
+
+
+// 开发环境错误处理
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
   // render the error page
   res.status(err.status || 500);
   res.render('error');
 });
 
-app.use(function(req,res,next){
-  if (!req.session.user) {
-    if(req.url=="/login"){
-      console.log(req.url);
-      next();//如果请求的地址是登录则通过，进行下一个请求
-    }else{
-      res.redirect('/index.html');
-    }
-  }else if (req.session.user) {
-      next();
-  }
-});
+//生产环境错误处理
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
+  });
+}); 
 
 
 function generateMixed(n) {

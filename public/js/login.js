@@ -144,34 +144,28 @@ var checkQCR = function(verifyCode){
 var validateUser = function(){
     var username = $('#username').val();
     var password = $('#password').val();
-    
+    console.log(username);
     if(username != '' && password != ''){
         $.ajax({
             type: 'POST',
-            url: 'http://localhost:3000/background/siginin',
+            url: '/background/siginin',
             data: {
                 username: username,
                 password:password
             },
-            xhrFields: {
-                withCredentials:true  //支持附带详细信息
-            },
-            dataType:'json',
             timeout:3000, //超时时间
-            success: function(result) {
-                console.log(result);
-                if(result.code === '1001'){
-                   
-                }else{
-                    $(".error").html("<p style='color:red;font-size:12px;'>"+result.msg+"</p>");
-                   
+            success: function(result,status) {
+                if(status == 'success'){ 
+                    location.href = 'index';
                 }
             },
             fail:function (err) {
-                console.log(err);
+                if(status == 'error'){ 
+                    location.href = 'login';
+                }
             }
         });
     }else{
-        $(".error").html("<p style='color:red;font-size:12px;'>"+result.msg+"</p>");
+        $(".error").html("<p style='color:red;font-size:12px;'>"+账号密码不能为空+"</p>");
     }
 }

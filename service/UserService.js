@@ -8,22 +8,26 @@ class UserService {
         var sql = 'SELECT * FROM users where 1=1 limit ' + start + ',' + offset + '';
         var r_data = {};
         dao(sql, function(err, result) {
-            if (result.length > 0) {
-                var r_data = {
-                    total: result.length,
-                    rows: result,
-                    msg: '获取用户数据成功',
-                    code: '1001'
-                };
+            if(err){
+                callback(r_data,err);
+            }else{
+                if (result.length > 0) {
+                    var r_data = {
+                        total: result.length,
+                        rows: result,
+                        msg: '获取用户数据成功',
+                        code: '1001'
+                    };
+                    
+                }
+                else {
+                    var r_data = {
+                        msg: '获取用户数据失败',
+                        code: '1000'
+                    };
                 
-            }
-            else {
-                var r_data = {
-                    msg: '获取用户数据失败',
-                    code: '1000'
-                };
-               
-            }
+                }
+            }   
         });
         return r_data;
     }
@@ -33,22 +37,27 @@ class UserService {
         var sql = 'SELECT * FROM users where 1=1';
         var r_data = {};
         dao(sql, function(err, result) {
-            if (result.length > 0) {
-                r_data = {
-                    total: result.length,
-                    rows: result,
-                    msg: '获取用户数据成功',
-                    code: '1001'
-                };
-                callback(r_data);
+            if(err){
+                callback(r_data,err);
+            }else{
+                if (result.length > 0) {
+                    r_data = {
+                        total: result.length,
+                        rows: result,
+                        msg: '获取用户数据成功',
+                        code: '1001'
+                    };
+                    callback(r_data);
+                }
+                else {
+                    r_data = {
+                        msg: '获取用户数据失败',
+                        code: '1000'
+                    };
+                    callback(r_data);
+                }
             }
-            else {
-                r_data = {
-                    msg: '获取用户数据失败',
-                    code: '1000'
-                };
-                callback(r_data);
-            }
+           
         });
     }
 
@@ -58,21 +67,21 @@ class UserService {
         var sql = 'SELECT * FROM users WHERE 1=1 AND username="'+ username +'"';
         var r_data = {};
         dao(sql, function(err, result) {
-            if (result.length > 0) {
-                r_data = {
-                    obj: result[0],
-                    msg: '获取用户成功',
-                    code: '1001'
-                };
-                callback(r_data);
+            if(err){
+                callback(r_data,err);
+            }else{
+                if (result.length > 0) {
+                    r_data = {
+                        obj: result[0],
+                        msg: '获取用户成功',
+                        code: '1001'
+                    };
+                    callback(r_data,err);
+                }else {
+                    callback(r_data,err);
+                }
             }
-            else {
-                r_data = {
-                    msg: '用户不存在',
-                    code: '1000'
-                };
-                callback(r_data);
-            }
+           
         });
     } 
 
@@ -83,22 +92,26 @@ class UserService {
         var r_data = {};
         
         dao(sql, function(err, result) {
+            if(err){
+                callback(r_data,err);
+            }else{
+                if (result.length > 0) {
+                    r_data = {
+                        obj: result[0],
+                        msg: '验证用户成功',
+                        code: '1001'
+                    };
+                    callback(r_data);
+                }
+                else {
+                    r_data = {
+                        msg: '用户密码错误',
+                        code: '1000'
+                    };
+                    callback(r_data);
+                }
+            }
            
-            if (result.length > 0) {
-                r_data = {
-                    obj: result[0],
-                    msg: '验证用户成功',
-                    code: '1001'
-                };
-                callback(r_data);
-            }
-            else {
-                r_data = {
-                    msg: '用户密码错误',
-                    code: '1000'
-                };
-                callback(r_data);
-            }
         });
     } 
 }
