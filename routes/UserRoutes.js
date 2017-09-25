@@ -27,5 +27,23 @@ router.get('/getUser', function(req, res, next){
     
 });
 
+// 跳转到用户列表页
+router.get('/userPage', function(req, res, next){
+    res.render('user/index');
+});
+
+//分页获取用户列表
+router.get('/getUserList', function(req, res, next){
+     
+      // 获取前台页面传过来的参数  
+     var params = req.body;
+     
+     var start = params.pageNumber - 1;
+     var offset = params.pageSize;
+    userService.getAllUsersOfPage(start, offset,function (ret) {
+        responseJSON(res,ret);
+    })
+});
+
 
 module.exports = router;

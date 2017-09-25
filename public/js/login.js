@@ -148,7 +148,7 @@ var validateUser = function(){
     if(username != '' && password != ''){
         $.ajax({
             type: 'POST',
-            url: '/background/siginin',
+            url: '/signin',
             data: {
                 username: username,
                 password:password
@@ -156,7 +156,7 @@ var validateUser = function(){
             timeout:3000, //超时时间
             success: function(result,status) {
                 if(status == 'success'){ 
-                    location.href = 'index';
+                    location.href = '/home';
                 }
             },
             fail:function (err) {

@@ -77,8 +77,8 @@ router.post('/login',function(req, res, next){
 });
 
 //跳转到后台登录页面
-router.get('/background/login',function(req, res, next){
-    console.log("ajhaha");
+router.get('/',function(req, res){
+
     res.render('login', 
         { 
             title: '后台管理系统',
@@ -86,7 +86,7 @@ router.get('/background/login',function(req, res, next){
         });
 });
   
-router.post('/background/siginin',function(req,res,next){     // 从此路径检测到post方式则进行post数据的处理操作
+router.post('/signin',function(req,res,next){     // 从此路径检测到post方式则进行post数据的处理操作
     //获取post上来的 data数据中 uname的值                   
     var username = req.body.username;
     var password = req.body.password;
@@ -106,7 +106,6 @@ router.post('/background/siginin',function(req,res,next){     // 从此路径检
                 }else{                                     //信息匹配成功，则将此对象（匹配到的user) 赋给session.user  并返回成功
                     req.session.user = ret.obj;
                     res.send(200);
-                    // res.redirect("/index");
                 }
             }
         });
@@ -118,6 +117,5 @@ router.post('/background/siginin',function(req,res,next){     // 从此路径检
         });
     }
 });
-
 
 module.exports = router;

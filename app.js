@@ -35,11 +35,13 @@ app.use(session({
 }));
 
 //设置路由
-app.use('/',index,login);
+app.use('/',login);
 app.use('/user', user);
+app.use('/home',index);
 app.use('/book', book);
 
 app.use(function(req,res,next){ 
+  
 	res.locals.user = req.session.user;
 	var err = req.session.error;
 	delete req.session.error;
