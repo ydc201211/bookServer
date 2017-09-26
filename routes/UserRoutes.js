@@ -21,7 +21,7 @@ router.get('/getUser', function(req, res, next){
     
     //获取前台参数
     var param = req.query || req.params;   
-    userService.getAllUsers(function(ret){
+    userService.getAllUsers(function(ret,err){
         responseJSON(res,ret);
     }); 
     
@@ -29,20 +29,30 @@ router.get('/getUser', function(req, res, next){
 
 // 跳转到用户列表页
 router.get('/userPage', function(req, res, next){
-    res.render('user/index');
+    res.render('user/userPage');
 });
 
 //分页获取用户列表
 router.get('/getUserList', function(req, res, next){
      
-      // 获取前台页面传过来的参数  
-     var params = req.body;
-     
-     var start = params.pageNumber - 1;
-     var offset = params.pageSize;
-    userService.getAllUsersOfPage(start, offset,function (ret) {
+      // 获取前台页面传过来的参数
+     var start = req.query.offset;
+     var offset = req.query.limit;
+    userService.getAllUsersOfPage(start, offset,function (ret,err) {
         responseJSON(res,ret);
     })
+});
+
+//更新用户
+router.post('/update', function(req, res, next){
+    console.log("asdasd");
+    console.log(req.body);
+});
+
+//更新用户
+router.post('/add', function(req, res, next){
+    
+   
 });
 
 

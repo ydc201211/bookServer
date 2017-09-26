@@ -37,7 +37,7 @@ app.use(session({
 //设置路由
 app.use('/',login);
 app.use('/user', user);
-app.use('/home',index);
+app.use('/',index);
 app.use('/book', book);
 
 app.use(function(req,res,next){ 

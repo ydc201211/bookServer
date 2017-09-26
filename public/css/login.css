@@ -3,7 +3,7 @@ body {
 }
 
 .form-signin {
-    max-width: 300px;
+    max-width: 350px;
     padding: 19px 29px 29px;
     margin: 0 auto 20px;
     background-color: #fff;
@@ -21,7 +21,7 @@ body {
     margin-bottom: 10px;
 }
 .form-signin-heading{
-    margin:10px 100px;
+    margin:10px 96px;
 }
 .form-signin input[type="text"],
 .form-signin input[type="password"] {
@@ -34,6 +34,10 @@ body {
     position: absolute;
     margin: 150px auto;
     width:100%;
+}
+
+.input-medium{
+    width: 50%;
 }
 #particles {
     width: 100%;

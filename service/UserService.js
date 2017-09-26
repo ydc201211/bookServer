@@ -3,10 +3,12 @@ var dao = require('../db/Dao');
 class UserService {
     constructor() {
     }
-    static getAllUsersOfPage(start, offset) {
+    static getAllUsersOfPage(start,offset,callback) {
         //执行获取user方法
+       
         var sql = 'SELECT * FROM users where 1=1 limit ' + start + ',' + offset + '';
         var r_data = {};
+        
         dao(sql, function(err, result) {
             if(err){
                 callback(r_data,err);
@@ -18,14 +20,14 @@ class UserService {
                         msg: '获取用户数据成功',
                         code: '1001'
                     };
-                    
+                    callback(r_data);
                 }
                 else {
                     var r_data = {
                         msg: '获取用户数据失败',
                         code: '1000'
                     };
-                
+                    callback(r_data);
                 }
             }   
         });
@@ -85,6 +87,7 @@ class UserService {
         });
     } 
 
+    //验证用户
     static 	validateUser(username,password,callback) {
         
         //执行获取user方法
@@ -114,6 +117,34 @@ class UserService {
            
         });
     } 
+
+    //更新用户
+    static updateUser(user,callback) {
+        
+        var sql= 'UPDATE users SET '+ 
+                'username ="'+ user.username +'",'+ 
+                'password ="'+ user.password +'",'+
+                'role ="'+ user.role +'",'+
+                'WHERE uid = "'+ +'"';
+
+         dao(sql, function(err, result) {
+             if(err){
+                 callback(r_data,err);
+             }else{
+                 if (result.length > 0) {
+                     r_data = {
+                         obj: result[0],
+                         msg: '获取用户成功',
+                         code: '1001'
+                     };
+                     callback(r_data,err);
+                 }else {
+                     callback(r_data,err);
+                 }
+             }
+            
+         });
+     } 
 }
 
 module.exports = UserService;

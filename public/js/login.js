@@ -161,7 +161,7 @@ var validateUser = function(){
             },
             fail:function (err) {
                 if(status == 'error'){ 
-                    location.href = 'login';
+                    location.href = '/login';
                 }
             }
         });
