@@ -6,7 +6,7 @@ class UserService {
     static getAllUsersOfPage(start,offset,callback) {
         //执行获取user方法
        
-        var sql = 'SELECT * FROM users where 1=1 limit ' + start + ',' + offset + '';
+        var sql = 'SELECT * FROM users where 1=1 ORDER BY uid DESC limit ' + start + ',' + offset + '';
         var r_data = {};
         
         dao(sql, function(err, result) {
@@ -129,20 +129,49 @@ class UserService {
 
          dao(sql, function(err, result) {
              if(err){
+                r_data = {
+                    msg: '更新用户失败',
+                    code: '1000'
+                }
                  callback(r_data,err);
              }else{
-                 if (result.length > 0) {
-                     r_data = {
-                         obj: result[0],
-                         msg: '获取用户成功',
-                         code: '1001'
-                     };
-                     callback(r_data,err);
-                 }else {
-                     callback(r_data,err);
-                 }
+                r_data = {
+                    obj: '',
+                    msg: '更新用户成功',
+                    code: '1001'
+                }
+                callback(r_data,err);   
              }
-            
+         });
+    }
+    
+    //添加用户
+    static addUser(user,callback) {
+        
+        var sql= 'INSERT INTO users (username,'+
+                        'password,'+
+                        'role)'+ 
+                        'VALUES'+
+                        '("'+ user.username +',"'+
+                        '"'+ user.password +',"'+
+                        '"'+ user.role +'")';
+
+         dao(sql, function(err, result) {
+             if(err){
+                r_data = {
+                    obj: '',
+                    msg: '添加用户失败',
+                    code: '1000'
+                }
+                 callback(r_data,err);
+             }else{
+                r_data = {
+                    obj: '',
+                    msg: '添加用户成功',
+                    code: '1001'
+                }
+                callback(r_data,err);   
+             }
          });
      } 
 }

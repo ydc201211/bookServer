@@ -15,8 +15,8 @@ var tableInit = {
             toolbar: '#toolbar',                //工具按钮用哪个容器
             queryParams: function (param) {
                 return { 
-                    limit: param.limit,
-                    offset: param.offset 
+                    start: param.offset,
+                    offset: param.limit 
                 };
             },//传递参数（*）
             pagination: true,                   //是否显示分页（*）

@@ -10,6 +10,7 @@ var index = require('./routes/IndexRoutes');
 var user = require('./routes/UserRoutes');
 var book = require('./routes/BookRoutes');
 var login = require('./routes/LoginRoutes');
+var key = require('./routes/KeyRoutes');
 
 var app = express();
 
@@ -39,6 +40,7 @@ app.use('/',login);
 app.use('/user', user);
 app.use('/',index);
 app.use('/book', book);
+app.use('/key',key);
 
 app.use(function(req,res,next){ 
   

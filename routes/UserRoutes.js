@@ -35,9 +35,9 @@ router.get('/userPage', function(req, res, next){
 //分页获取用户列表
 router.get('/getUserList', function(req, res, next){
      
-      // 获取前台页面传过来的参数
-     var start = req.query.offset;
-     var offset = req.query.limit;
+    // 获取前台页面传过来的参数
+    var start = req.query.start;
+    var offset = req.query.offset;
     userService.getAllUsersOfPage(start, offset,function (ret,err) {
         responseJSON(res,ret);
     })
@@ -45,13 +45,23 @@ router.get('/getUserList', function(req, res, next){
 
 //更新用户
 router.post('/update', function(req, res, next){
-    console.log("asdasd");
-    console.log(req.body);
+    var user = req.body;
+    if(req.body != null){
+        userService.updateUser(user,function (ret,err) {
+            responseJSON(res,ret);
+        })
+    }
 });
 
 //更新用户
 router.post('/add', function(req, res, next){
     
+    var user = req.body;
+    if(req.body != null){
+        userService.addUser(user,function (ret,err) {
+            responseJSON(res,ret);
+        })
+    }
    
 });
 
