@@ -1,24 +1,25 @@
-  //密码管理
-var CodeManager = {
+var CodeManager  = {
     createKeyList:function(keyCount) {
+       
         var keyList = [];
-        for(var i= 0;i < keyCount;i++){
+        for(var i= 0;i < Number(keyCount) ;i++){
             var tempStr = this.createCode();
             var date = new Date();
-            
             var dateTime = date.getFullYear()+
                 "-" + (date.getMonth()+1)+"-"+date.getDate()+
                 " " + date.getHours()+":"+date.getMinutes()+
                 ":" + date.getSeconds();
             var key = {
-                'code': tempStr,
-                'createTime': dateTime,
-                'enable': 1
-            }
+                'kCode': tempStr,
+                'kCreateTime': dateTime,
+                'kEnable': 1
+            }       
             keyList.push(key);
         }
+        return keyList;
     },
-    createCode:function () {
+
+    createCode:function() {
         var keyStr = '';
         var charArr = [
             '1','2','3','4','5',

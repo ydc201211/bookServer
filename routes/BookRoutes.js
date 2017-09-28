@@ -16,32 +16,31 @@ var responseJSON = function (res, ret) {
       res.json(ret);
 }};
 
+router.get('/bookPage',function (req,res,next) {
+    res.render('book/bookPage');
+})
 // 获取书籍
-router.post('/getBook', function(req, res, next){
+router.get('/getBookList',function(req, res, next){
     
     // 设置跨域请求
-    res = setHead(true,res);
+    res = setHead('CrossDomain',res);
     
-     // 获取前台页面传过来的参数  
-    var params = req.body;
+    var offset = req.query.offset;
+    var limit = req.query.limit;
     
-    var start = params.pageNumber - 1;
-    var offset = params.pageSize;
-    bookService.getAllBooksOfPage(start,offset,function(ret) {
-        res = setHead('CrossDomain',res);
+    bookService.getAllBooksOfPage(offset,limit,function(ret) {
         responseJSON(res,ret);
     }); 
     
 });
 
 // 获取书籍章节
-router.post('/getChapter', function(req, res, next){
-     // 设置跨域请求
-     res = setHead('CrossDomain',res);
+router.get('/getChapter', function(req, res, next){
+    // 设置跨域请求
+    res = setHead('CrossDomain',res);
      
-      // 获取前台页面传过来的参数
-    var params = req.body;
-    var bid = params.parentId;
+    // 获取前台页面传过来的参数
+    var bid = req.query.parentId;
     bookService.getChapters(bid,function (ret){
         responseJSON(res,ret);
     });

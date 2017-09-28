@@ -10,13 +10,13 @@ var tableInit = {
     Init: function () {
         //绑定table的viewmodel
         this.myViewModel = new ko.bootstrapTableViewModel({
-            url: '/user/getUserList',         //请求后台的URL（*）
+            url: '/book/getBookList',         //请求后台的URL（*）
             method: 'GET',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             queryParams: function (param) {
                 return { 
-                    start: param.offset,
-                    offset: param.limit 
+                    offset: param.offset,
+                    limit: param.limit 
                 };
             },//传递参数（*）
             pagination: true,                   //是否显示分页（*）
@@ -36,10 +36,14 @@ var operate = {
         this.operateUpdate();
         this.operateDelete();
         this.DepartmentModel = {
-            uid: ko.observable(),
-            username: ko.observable(),
-            password: ko.observable(),
-            role: ko.observable(),
+            bid: ko.observable(),
+            bookName: ko.observable(),
+            bookCreateTime: ko.observable(),
+            bookChapter:ko.observable(),
+            bookAuthor: ko.observable(),
+        };
+        this.DeleteModal = {
+            count:ko.observable()
         };
     },
     //新增
@@ -47,11 +51,11 @@ var operate = {
         $('#btn_add').on("click", function () {
             $("#myModal").modal().on("shown.bs.modal", function () {
                 var oEmptyModel = {
-                    username: ko.observable(),
-                    password: ko.observable(),
-                    role: ko.observable()
+                    bookName: ko.observable(),
+                    bookCreateTime: ko.observable(),
+                    bookChapter: ko.observable("0"),
+                    bookAuthor:ko.observable()
                 };
-                $('#txt_username').attr('enable','true');
                 ko.utils.extend(operate.DepartmentModel, oEmptyModel);
                 ko.applyBindings(operate.DepartmentModel, document.getElementById("myModal"));
                 operate.operateSave();
@@ -85,23 +89,19 @@ var operate = {
     },
     //删除
     operateDelete: function () {
+
         $('#btn_delete').on("click", function () {
             var arrselectedData = tableInit.myViewModel.getSelections();
-            console.log("1");
             if(!operate.deleteCheck(arrselectedData)){
-                console.log("2");
                 return;
             }else{
                 $("#delete-pop").modal().on("shown.bs.modal", function () {
-                    var myViewModel = 
-                    {
-                        count: ko.observable(arrselectedData.length)
-                    };
-                    ko.applyBindings(myViewModel,
-                         document.getElementById("delete-pop"));
+                    
+                    operate.DeleteModal.count(arrselectedData.length);
+                    ko.applyBindings(operate.DeleteModal, document.getElementById("delete-pop"));
                     $('.del-btn').on("click", function(e) {
                         $.ajax({
-                            url: "/user/delete",
+                            url: "/book/delete",
                             method: "POST",
                             contentType: 'application/json',
                             data: JSON.stringify(arrselectedData),
@@ -125,7 +125,7 @@ var operate = {
             var oDataModel = ko.toJS(oViewModel);
             var funcName = oDataModel.uid?"update":"add";
             $.ajax({
-                url: "/user/"+funcName,
+                url: "/book/"+funcName,
                 type: "POST",
                 data: oDataModel,
                 success: function (data, status) {
@@ -147,6 +147,7 @@ var operate = {
         }
         return true;
     },
+    
     deleteCheck:function(arr){
         if (arr.length <= 0) {
             alert("请至少选择一行数据");

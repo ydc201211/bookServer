@@ -5,7 +5,7 @@ class UserService {
     }
     static getAllUsersOfPage(start,offset,callback) {
         //执行获取user方法
-       
+        var _this = this;
         var sql = 'SELECT * FROM users where 1=1 ORDER BY uid DESC limit ' + start + ',' + offset + '';
         var r_data = {};
         
@@ -20,7 +20,11 @@ class UserService {
                         msg: '获取用户数据成功',
                         code: '1001'
                     };
-                    callback(r_data);
+                    _this.getAllUsers(function(ret){
+                        r_data.total = ret.total;
+                        callback(r_data);
+                    })
+                   
                 }
                 else {
                     var r_data = {
@@ -45,7 +49,6 @@ class UserService {
                 if (result.length > 0) {
                     r_data = {
                         total: result.length,
-                        rows: result,
                         msg: '获取用户数据成功',
                         code: '1001'
                     };

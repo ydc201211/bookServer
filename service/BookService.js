@@ -2,14 +2,12 @@ var dao = require('../db/Dao');
 
 class BookService {
     
-
     constructor() {
-        
     }
-    static getAllBooksOfPage(start, offset,callback) {
-        //执行获取user方法
+    static getAllBooksOfPage(offset,limit,callback) {
+        //执行获取book方法
         var _this = this;
-        var sql = 'SELECT * FROM  books where 1=1 limit ' + start + ',' + offset + '';
+        var sql = 'SELECT * FROM  books where 1=1 ORDER BY bid DESC LIMIT ' + offset + ',' + limit + '';
         var r_data = {};
         dao(sql, function(err, result) {
             if (result.length > 0) {
@@ -42,7 +40,6 @@ class BookService {
             if (result.length > 0) {
                 r_data = {
                     total: result.length,
-                    rows: result,
                     msg: '获取用户数据成功',
                     code: '1001'
                 };

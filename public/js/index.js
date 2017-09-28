@@ -22,7 +22,7 @@ $(function() {
                     {
                         id:'book',
                         text:'书籍管理',
-                        href:'book/keyPage'
+                        href:'book/bookPage'
                     }]
                 }]
             }]

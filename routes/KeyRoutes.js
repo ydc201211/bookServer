@@ -25,21 +25,23 @@ router.get('/keyPage', function(req, res, next){
 //分页获取密码列表
 router.get('/getKeyList', function(req, res, next){
     // 获取前台页面传过来的参数
-    var start = req.query.start;
     var offset = req.query.offset;
-    keyService.getAllKeysOfPage(start, offset,function (ret,err) {
+    var limit = req.query.limit;
+    // 获取所有秘钥的数量
+    keyService.getAllKeysOfPage(offset,limit,function (ret,err) {
         responseJSON(res,ret);
     })
 });
 
 // 添加密码
 router.post('/add', function(req, res, next){
-    var codeCount = req.query.codeCount;
-    var keyList = codeManager.createKeyList(codeCount);
+    var keyCount = req.body.keyCount;
+    var keyList = codeManager.createKeyList(keyCount);
+    console.log(keyList);
     var errInfo = '';
     if(keyList != null){
         for(var i in keyList){
-            keyService.addKey(key,function (ret,err) {
+            keyService.addKey(keyList[i],function (ret,err) {
                 errInfo = err
             });
             if(errInfo){

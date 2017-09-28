@@ -38,9 +38,12 @@ router.get('/getUserList', function(req, res, next){
     // 获取前台页面传过来的参数
     var start = req.query.start;
     var offset = req.query.offset;
-    userService.getAllUsersOfPage(start, offset,function (ret,err) {
+    var data_length = 0;
+    
+    userService.getAllUsersOfPage(start, offset,function (ret,err) {  
         responseJSON(res,ret);
     })
+    
 });
 
 //更新用户

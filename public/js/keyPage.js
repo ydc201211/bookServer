@@ -4,6 +4,27 @@ $(function () {
 
     //2、注册增删改事件
     operate.operateInit();
+
+    $('#addKeys').on('click',function (e) {
+       var count =  $('.count-select').val();
+        
+        if(count != ''){
+            $.ajax({
+                url: "/key/add",
+                method: "POST",
+                contentType: 'application/x-www-form-urlencoded',
+                dataType:'json',
+                data: {
+                    keyCount:count
+                },
+                success: function (data, status) {
+                    tableInit.myViewModel.refresh();
+                }
+            });
+        }else{
+            return;
+        }
+    })
 });
 //初始化表格
 var tableInit = {
@@ -15,11 +36,12 @@ var tableInit = {
             toolbar: '#toolbar',                //工具按钮用哪个容器
             queryParams: function (param) {
                 return {
-                    start: param.offset,
-                    offset: param.limit 
+                    offset: param.offset,
+                    limit: param.limit 
                 };
-            },//传递参数（*）
-            pagination: true,                   //是否显示分页（*）
+            },
+            striped: true,
+            pagination: true,                //是否显示分页（*）
             sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
             pageNumber: 1,                      //初始化加载第一页，默认第一页
             pageSize: 10,                       //每页的记录行数（*）
@@ -48,19 +70,27 @@ var operate = {
             if(!operate.operateCheck(arrselectedData)){
                 return;
             }else{
-                if(operate.deleteCheck(arrselectedData)){
-                    $.ajax({
-                        url: "/key/delete",
-                        type: "POST",
-                        contentType: 'application/json',
-                        data: JSON.stringify(arrselectedData),
-                        success: function (data, status) {
-                            tableInit.myViewModel.refresh();
-                        }
-                    });    
-                }else{
-                    return;
-                }   
+                $("#delete-pop").modal().on("shown.bs.modal", function () {
+                    var myViewModel = 
+                    {
+                        count: ko.observable(arrselectedData.length)
+                    };
+                    ko.applyBindings(myViewModel,
+                         document.getElementById("delete-pop"));
+                    $('.del-btn').on("click", function(e) {
+                        $.ajax({
+                            url: "/key/delete",
+                            method: "POST",
+                            contentType: 'application/json',
+                            data: JSON.stringify(arrselectedData),
+                            success: function (data, status) {
+                                tableInit.myViewModel.refresh();
+                            }
+                        });    
+                    });
+                }).on('hidden.bs.modal', function () {
+                    ko.cleanNode(document.getElementById("delete-pop"));
+                });  
             }
         });
     },
@@ -73,15 +103,4 @@ var operate = {
         return true;
     },
     
-    deleteCheck:function(arr){
-        var myViewModel = 
-        {
-            count: ko.observable(arr.length)
-        };
-        ko.applyBindings(myViewModel);
-        $('.del-btn').on("click", function(e) {
-            return true;
-        });
-        return false;
-    }
 }
