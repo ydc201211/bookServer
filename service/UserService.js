@@ -123,15 +123,16 @@ class UserService {
 
     //更新用户
     static updateUser(user,callback) {
-        
+        var r_data = {};
         var sql= 'UPDATE users SET '+ 
                 'username ="'+ user.username +'",'+ 
                 'password ="'+ user.password +'",'+
-                'role ="'+ user.role +'",'+
-                'WHERE uid = "'+ +'"';
+                'role ="'+ user.role +'"'+
+                'WHERE uid = '+ user.uid +'';
 
          dao(sql, function(err, result) {
              if(err){
+                console.log(err);
                 r_data = {
                     msg: '更新用户失败',
                     code: '1000'

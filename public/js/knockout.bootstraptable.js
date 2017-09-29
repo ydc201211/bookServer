@@ -20,7 +20,7 @@ ko.bindingHandlers.myBootstrapTable = {
 
         this.default = {
             search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
-            strictSearch: true,
+            strictSearch: false,
             showColumns: true,                  //是否显示所有的列
             cache:false,
             showRefresh: true,                  //是否显示刷新按钮

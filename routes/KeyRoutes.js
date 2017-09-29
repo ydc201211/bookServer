@@ -68,7 +68,8 @@ router.post('/delete', function(req, res, next){
     var errInfo = '';
     if(keyList != null){
         for(var i in keyList){
-            keyService.deleteKey(keyList[i].kid,function (ret,err) {
+            console.log(keyList[i].kid+"123123");
+            keyService.delKey(keyList[i].kid,function (ret,err) {
                 errInfo = err
             });
             if(errInfo){

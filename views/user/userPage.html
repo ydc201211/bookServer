@@ -71,18 +71,16 @@
     <div id="delete-pop" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header delete-modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="myModalLabel">警告</h4>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body delete-modal-body">
                     <p>是否删除所选的<span data-bind="value:count"></span>条数据</p>
                 </div>
-                <div class="modal-header">
-                    <div class="modal-footer">
-                        <a href="#" class="btn btn-danger del-btn">确认</a>
-                        <a href="#" class="btn btn-default" data-dismiss="modal">关闭</a>
-                    </div>
+                <div class="modal-footer delete-modal-footer">
+                    <a href="#" class="btn btn-danger del-btn">确认</a>
+                    <a href="#" class="btn btn-default" data-dismiss="modal">关闭</a>
                 </div>
             </div>
         </div>

@@ -19,6 +19,7 @@ var tableInit = {
                     offset: param.limit 
                 };
             },//传递参数（*）
+            striped: true,
             pagination: true,                   //是否显示分页（*）
             sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
             pageNumber: 1,                      //初始化加载第一页，默认第一页
@@ -40,6 +41,9 @@ var operate = {
             username: ko.observable(),
             password: ko.observable(),
             role: ko.observable(),
+        };
+        this.DeleteModal = {
+            count:ko.observable()
         };
     },
     //新增
@@ -87,18 +91,13 @@ var operate = {
     operateDelete: function () {
         $('#btn_delete').on("click", function () {
             var arrselectedData = tableInit.myViewModel.getSelections();
-            console.log("1");
             if(!operate.deleteCheck(arrselectedData)){
-                console.log("2");
                 return;
             }else{
                 $("#delete-pop").modal().on("shown.bs.modal", function () {
-                    var myViewModel = 
-                    {
-                        count: ko.observable(arrselectedData.length)
-                    };
-                    ko.applyBindings(myViewModel,
-                         document.getElementById("delete-pop"));
+                    operate.deleteWaitingModal();
+                    operate.DeleteModal.count(arrselectedData.length);
+                    ko.applyBindings(operate.DeleteModal, document.getElementById("delete-pop"));
                     $('.del-btn').on("click", function(e) {
                         $.ajax({
                             url: "/user/delete",
@@ -107,6 +106,7 @@ var operate = {
                             data: JSON.stringify(arrselectedData),
                             success: function (data, status) {
                                 tableInit.myViewModel.refresh();
+                                operate.deleteCompleteModal();
                             }
                         });    
                     });
@@ -129,7 +129,12 @@ var operate = {
                 type: "POST",
                 data: oDataModel,
                 success: function (data, status) {
-                    alert(status);
+                    
+                    if(status === "success"){
+                        alert(data.msg);
+                    }else{
+                        alert(data.msg);
+                    }
                     tableInit.myViewModel.refresh();
                 }
             });
@@ -153,5 +158,14 @@ var operate = {
             return false;
         }
         return true;
+    },
+    deleteWaitingModal:function () {
+        $('.delete-modal-header').html(' <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button><h4 class="modal-title" id="myModalLabel">警告</h4>')
+        $('.delete-modal-body').html('<p>是否删除所选的<span id="delete-count" data-bind="value:count"></span>条数据</p>');
+        $('.delete-modal-footer').html('<a href="#" class="btn btn-danger del-btn">确认</a><a href="#" class="btn btn-default" data-dismiss="modal">关闭</a>');
+    },
+    deleteCompleteModal:function() {
+        $('.delete-modal-body').text('操作成功');
+        $('.delete-modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">返回</button>');
     }
 }

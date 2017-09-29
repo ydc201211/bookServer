@@ -8,7 +8,7 @@ class KeyService {
         var _this = this;
         var sql = 'SELECT * FROM book_keys WHERE 1=1 ORDER BY kid DESC LIMIT '+ offset +','+ limit +'';
         var r_data = {};
-        console.log(offset + "aksdalksd" + limit);   
+        
         dao(sql, function(err, result) {
             if(err){
                 var r_data = {
@@ -80,7 +80,7 @@ class KeyService {
 
          dao(sql, function(err, result) {
              if(err){
-                console.log(err);
+                
                 r_data = {
                     obj: '',
                     msg: '添加密码失败',
@@ -88,7 +88,7 @@ class KeyService {
                 }
                  callback(r_data,err);
              }else{
-                console.log('aaaa');
+            
                 r_data = {
                     obj: '',
                     msg: '添加密码成功',
@@ -101,7 +101,7 @@ class KeyService {
     
     //删除密码
     static delKey(kid,callback) {
-        var sql= 'DELETE FROM book_keys WHERE uid = "'+kid+'"';
+        var sql= 'DELETE FROM book_keys WHERE kid = '+kid+'';
         var r_data = {};
          dao(sql, function(err, result) {
              if(err){

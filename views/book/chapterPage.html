@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <link rel="stylesheet" type="text/css" href="/public/lib/bootstrap/css/bootstrap.css" />
+        <link rel="stylesheet" type="text/css" href="/public/lib/bootstrap/css/bootstrap-responsive.css" />
+        <link rel="stylesheet" type="text/css" href="/public/css/common/style.css" />
+        <link rel="stylesheet" type="text/css" href="/public/css//detailPage.css" />
+        <!-- 引入bootstrap-table.css -->
+        <link href="/public/lib/bootstrap/css/bootstrap-table.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container">
+        
+            <div class="book-psot">
+                
+            </div>
+            
+            <div class="row row-bookId">
+                <label class="col-md-2">书籍编号:</label>
+                <div class="col-md-2" id="text-bookId" ><%= bid %></div>
+            </div>
+            <div class="row row-bookName">
+                <div class="col-md-2">书籍名:</div>
+                <div class="col-md-2 text_bookName" data-bind="">1</div>
+            </div>
+            <div class="row row-bookCreateTime">
+                <div class="col-md-2">书籍创建时间:</div>
+                <div class="col-md-2 text_bookCreateTime" data-bind=""></div>
+            </div>
+            <div class="row row-bookAuthor">
+                <div class="col-md-2">书籍作者:</div>
+                <div class="col-md-2 text_bookAuthor" data-bind=""></div>
+            </div>
+            <div class="row row-bookChapter">
+                <div class="col-md-2">书籍章节:</div>
+                <div class="col-md-2 text_bookChapter" data-bind=""></div>
+            </div>
+            
+        </div>
+
+        <table id="tb_dept" data-bind="myBootstrapTable:$root">    
+        </table>
+
+        <script type="text/javascript" src="/public/js/lib/jquery.js"></script>
+        <!-- <script type="text/javascript" src="/public/js/lib/jquery.sorted.js"></script> -->
+        <script type="text/javascript" src="/public/lib/bootstrap/js/bootstrap.js"></script>
+        <script type="text/javascript" src="/public/js/lib/ckform.js"></script>
+        <script type="text/javascript" src="/public/js/lib/common.js"></script>
+        <script type="text/javascript" src="/public/lib/bootstrap/js/bootstrap-table.js" ></script>
+        <script type="text/javascript" src="/public/lib/bootstrap/js/bootstrap-table-zh-CN.js"></script>
+        
+        <script src="/public/js/lib/knockout-3.4.0.js"></script>
+        <script src="/public/js/lib/knockout.mapping.js"></script>
+        <script src="/public/js/knockout.bootstraptable.js"></script>
+        <script type="text/javascript" src="/public/js/detailPage.js"></script>
+    </body>
+</html>
