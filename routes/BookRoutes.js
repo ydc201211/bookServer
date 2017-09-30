@@ -48,6 +48,17 @@ router.get('/getChapter', function(req, res, next){
     });
     
 });
+router.get('/getChapterOfPage', function(req, res, next){
+       
+    // 获取前台页面传过来的参数
+    var bid = req.query.parentId;
+    var offset = req.query.offset;
+    var limit = req.query.limit;
+    bookService.getChaptersOfPage(bid,offset,limit,function (ret){
+        responseJSON(res,ret);
+    });
+    
+});
 router.post('/add', function(req, res, next){
     var book = req.body;
     var r_data = {};
@@ -122,9 +133,34 @@ router.post('/update', function(req, res, next){
 //跳转到书籍详细页
 router.get('/detailPage',function (req,res,next) {
     var bid = req.query.bid;
-    res.render('book/chapterPage',
-    {
-        bid:bid
+    bookService.getBookByBSN(bid,function (ret,err) {
+        res.render('book/chapterPage',ret.obj);    
     });
+    
 })
+
+// 删除章节
+router.post('/chapter/delete', function(req, res, next){
+    var chapterList = req.body;
+    var errInfo = '';
+    if(chapterList != null){
+        for(var i in chapterList){
+            console.log(chapterList[i].cid);
+            bookService.delChapter(chapterList[i].cid,function (ret,err) {
+                errInfo = err
+            });
+            if(errInfo){
+                break;
+            }
+        }
+        var r_data = {
+            msg: '删除章节成功',
+            code: '1001'
+        }
+        responseJSON(res,r_data);
+    }else{
+        return;
+    }
+});
+
 module.exports = router;

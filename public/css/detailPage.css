@@ -1,0 +1,12 @@
+.panel-primary{
+    margin-top:60px;
+    width: 60%;
+}
+.row{
+    margin: 0px;
+    font-size: 16px;
+    font-family:"微软雅黑";
+}
+label{
+    text-align:right;
+}

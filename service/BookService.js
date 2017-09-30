@@ -54,6 +54,29 @@ class BookService {
         });
     }
 
+    static getBookByBSN(bid,callback) {
+        
+         //执行获取user方法
+        var sql = 'SELECT * FROM books where 1=1 AND bid="'+ bid +'"';
+        var r_data = {};
+        dao(sql, function(err, result) {
+            if (result.length > 0) {
+                r_data = {
+                    obj:result[0],
+                    msg: '获取书籍数据成功',
+                    code: '1001'
+                };
+                callback(r_data);
+            }else {
+                r_data = {
+                    msg: '获取书籍数据失败',
+                    code: '1000'
+                };
+                callback(r_data);
+            }
+        });
+    }
+
     static getChapters(bid,callback) {
         
          //执行获取user方法
@@ -61,6 +84,32 @@ class BookService {
         var r_data = {};
         dao(sql, function(err, result) {
             if (result) {
+                r_data = {
+                    total: result.length,
+                    rows: result,
+                    msg: '获取书籍数据成功',
+                    code: '1001'
+                };
+                callback(r_data);
+            }else {
+                r_data = {
+                    msg: '获取书籍数据失败',
+                    code: '1000'
+                };
+                callback(r_data);
+            }
+        });
+    }
+
+    static getChaptersOfPage(bid,offset,limit,callback) {
+        
+         //执行获取user方法
+        var sql = 'SELECT * FROM chapters where 1=1 and bid="'+ bid +
+            '" ORDER BY chapterNO ASC LIMIT ' + offset + ',' + limit + '';
+        var r_data = {};
+        dao(sql, function(err, result) {
+            if (result) {
+                console.log(err);
                 r_data = {
                     total: result.length,
                     rows: result,
@@ -159,6 +208,26 @@ class BookService {
         });
     }
     
+     //删除章节
+     static delChapter(cid,callback) {
+        var sql= 'DELETE FROM chapters WHERE cid = '+cid+'';
+        var r_data = {};
+        dao(sql, function(err, result) {
+            if(err){
+                r_data = {
+                    msg: '删除章节失败',
+                    code: '1000'
+                }
+                callback(r_data,err);
+            }else{
+                r_data = {
+                    msg: '删除章节成功',
+                    code: '1001'
+                }
+                callback(r_data,err);   
+            }
+        });
+    }
 }
 
 module.exports = BookService;
