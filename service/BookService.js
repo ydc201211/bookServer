@@ -5,7 +5,7 @@ class BookService {
     constructor() {
     }
     static getAllBooksOfPage(offset,limit,callback) {
-        //执行获取book方法
+        //分页获取书籍
         var _this = this;
         var sql = 'SELECT * FROM  books where 1=1 ORDER BY bid DESC LIMIT ' + offset + ',' + limit + '';
         var r_data = {};
@@ -33,7 +33,7 @@ class BookService {
     }
     static getAllBooks(callback) {
        
-        //执行获取user方法
+        //获取所有书籍
         var sql = 'SELECT * FROM books where 1=1';
         var r_data = {};
         dao(sql, function(err, result) {
@@ -56,7 +56,7 @@ class BookService {
 
     static getBookByBSN(bid,callback) {
         
-         //执行获取user方法
+         //通过书籍号获取书籍信息
         var sql = 'SELECT * FROM books where 1=1 AND bid="'+ bid +'"';
         var r_data = {};
         dao(sql, function(err, result) {
@@ -79,7 +79,7 @@ class BookService {
 
     static getChapters(bid,callback) {
         
-         //执行获取user方法
+         //根据书籍号获得章节
         var sql = 'SELECT * FROM chapters where 1=1 and bid="'+ bid +'"';
         var r_data = {};
         dao(sql, function(err, result) {
@@ -103,7 +103,7 @@ class BookService {
 
     static getChaptersOfPage(bid,offset,limit,callback) {
         
-         //执行获取user方法
+         //分页获取章节
         var sql = 'SELECT * FROM chapters where 1=1 and bid="'+ bid +
             '" ORDER BY chapterNO ASC LIMIT ' + offset + ',' + limit + '';
         var r_data = {};
@@ -127,6 +127,11 @@ class BookService {
         });
     }
 
+    /**
+     * 添加书籍
+     * @param {*} book 
+     * @param {*} callback 
+     */
     static addBook(book,callback){
         var r_data = {};
         var sql= 'INSERT IGNORE INTO books (bid,'+
@@ -208,6 +213,27 @@ class BookService {
         });
     }
     
+    //删除章节
+    static delChapter(cid,callback) {
+        var sql= 'DELETE FROM chapters WHERE cid = '+cid+'';
+        var r_data = {};
+        dao(sql, function(err, result) {
+            if(err){
+                r_data = {
+                    msg: '删除章节失败',
+                    code: '1000'
+                }
+                callback(r_data,err);
+            }else{
+                r_data = {
+                    msg: '删除章节成功',
+                    code: '1001'
+                }
+                callback(r_data,err);   
+            }
+        });
+    }
+
      //删除章节
      static delChapter(cid,callback) {
         var sql= 'DELETE FROM chapters WHERE cid = '+cid+'';

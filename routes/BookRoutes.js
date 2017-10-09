@@ -163,4 +163,28 @@ router.post('/chapter/delete', function(req, res, next){
     }
 });
 
+// 删除章节
+router.post('/chapter/add', function(req, res, next){
+    var chapterList = req.body;
+    var errInfo = '';
+    if(chapterList != null){
+        for(var i in chapterList){
+            console.log(chapterList[i].cid);
+            bookService.delChapter(chapterList[i].cid,function (ret,err) {
+                errInfo = err
+            });
+            if(errInfo){
+                break;
+            }
+        }
+        var r_data = {
+            msg: '删除章节成功',
+            code: '1001'
+        }
+        responseJSON(res,r_data);
+    }else{
+        return;
+    }
+});
+
 module.exports = router;

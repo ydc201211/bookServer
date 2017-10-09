@@ -11,6 +11,7 @@ var user = require('./routes/UserRoutes');
 var book = require('./routes/BookRoutes');
 var login = require('./routes/LoginRoutes');
 var key = require('./routes/KeyRoutes');
+var file = require('./routes/FileOperateRoutes');
 
 var app = express();
 
@@ -41,6 +42,7 @@ app.use('/user', user);
 app.use('/',index);
 app.use('/book', book);
 app.use('/key',key);
+app.use('/file',file);
 
 app.use(function(req,res,next){ 
   
@@ -60,8 +62,6 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
-
-
 
 // 开发环境错误处理
 app.use(function(err, req, res, next) {
