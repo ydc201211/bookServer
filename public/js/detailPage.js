@@ -57,7 +57,16 @@ var tableInit = {
                     field:'chapterSize',
                     title:'章节大小',
                     align:'center',
-                    sortable: true
+                    sortable: true,
+                    formatter : function(value, row) {
+                        var size = 0;
+                        if((value / 1024) < 1024){
+                            size = (value / 1024).toFixed(2) + ' KB';
+                        }else{
+                            size = (value / 1024 / 1024).toFixed(2) + ' MB';
+                        }
+                        return size;
+                    }
                 },
                 {
                     field:'chapterEditTime',
@@ -110,6 +119,7 @@ var operate = {
     operateAdd: function(){
         $('#btn_add').on("click", function () {
             $("#myModal").modal().on("shown.bs.modal", function () {
+                
                 var oEmptyModel = {
                     bookName: ko.observable(),
                     bookCreateTime: ko.observable(),
@@ -119,8 +129,10 @@ var operate = {
                 ko.utils.extend(operate.DepartmentModel, oEmptyModel);
                 ko.applyBindings(operate.DepartmentModel, document.getElementById("myModal"));
                 operate.operateSave();
+                operate.uploadFile();
+                initProgress();//初始化进度条
             }).on('hidden.bs.modal', function () {
-                $('.progress').hide();
+              
                 ko.cleanNode(document.getElementById("myModal"));
             });
         });
@@ -142,10 +154,12 @@ var operate = {
                     ko.utils.extend(operate.DepartmentModel,viewModel);
                     ko.applyBindings(operate.DepartmentModel, document.getElementById("myModal"));
                     operate.operateSave();
+                    operate.uploadFile();
+                    initProgress();//初始化进度条
                 }).on('hidden.bs.modal', function () {
                     //关闭弹出框的时候清除绑定(这个清空包括清空绑定和清空注册事件)
                     ko.cleanNode(document.getElementById("myModal"));
-                    $('.progress').hide();
+                    
                 });
             }
         });
@@ -183,17 +197,20 @@ var operate = {
     //保存数据
     operateSave: function () {
         $('#btn_submit').on("click", function () {
-
+            var files = $('input[name="inputFile"]').prop('files');//获取到文件列表
+            
             //取到当前的viewmodel
             var oViewModel = operate.DepartmentModel;
             
             //将Viewmodel转换为数据model
             var oDataModel = ko.toJS(oViewModel);
             oDataModel.bid = $('#text-bookId').attr('custom-data'); 
-            console.log(oDataModel.bid);
+            oDataModel.downloadUrl = files[0].name;//设置文件名字
+            oDataModel.chapterSize = files[0].size;
+
             var funcName = oDataModel.cid?"update":"add";
             $.ajax({
-                url: "/chapter/"+funcName,
+                url: "/book/chapter/"+funcName,
                 type: "POST",
                 data: oDataModel,
                 success: function (data, status) {
@@ -241,29 +258,34 @@ var operate = {
 
     uploadFile:function(){
         $('#upload-btn').on('click',function(e){
-            initProgress();//初始化进度条
+            var files = $('input[name="inputFile"]').prop('files');//获取到文件列表
+            if(files.length > 0){
+
             //创建FormData对象，初始化为form表单中的数据。需要添加其他数据可使用formData.append("property", "value");
-            var formData = new FormData($('form')[0]);
-            //ajax异步上传
-            $.ajax({
-                url: "/file/upload",
-                type: "POST",
-                data: formData,
-                contentType: false, //必须false才会自动加上正确的Content-Type
-                processData: false, //必须false才会避开jQuery对 formdata 的默认处理
-                xhr: function(){ //获取ajaxSettings中的xhr对象，为它的upload属性绑定progress事件的处理函数
-                    myXhr = $.ajaxSettings.xhr();
-                    if(myXhr.upload){ //检查upload属性是否存在
-                        //绑定progress事件的回调函数
-                        myXhr.upload.addEventListener('progress',progressHandlingFunction, false);
+                var formData = new FormData($('form')[0]);
+                //ajax异步上传
+                $.ajax({
+                    url: "/file/upload",
+                    type: "POST",
+                    data: formData,
+                    contentType: false, //必须false才会自动加上正确的Content-Type
+                    processData: false, //必须false才会避开jQuery对 formdata 的默认处理
+                    xhr: function(){ //获取ajaxSettings中的xhr对象，为它的upload属性绑定progress事件的处理函数
+                        myXhr = $.ajaxSettings.xhr();
+                        if(myXhr.upload){ //检查upload属性是否存在
+                            //绑定progress事件的回调函数
+                            myXhr.upload.addEventListener('progress',progressHandlingFunction, false);
+                        }
+                        return myXhr; //xhr对象返回给jQuery使用
+                    },
+                    success: function(result){
+                        // $("#result").html(result.data);
+                        
                     }
-                    return myXhr; //xhr对象返回给jQuery使用
-                },
-                success: function(result){
-                    // $("#result").html(result.data);
-                    
-                }
-            });
+                });
+            }else{
+                alert("请选择文件");
+            }
         });
     },
 }
@@ -278,9 +300,9 @@ function progressHandlingFunction(e) {
         
     }
 }
+
 function initProgress(){
     //初始化进度条
-    $('.progress').show();
     $('.progress-bar').css('width','0%');
     $('.progress-bar').html('上传中...');
 }

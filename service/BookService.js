@@ -213,25 +213,69 @@ class BookService {
         });
     }
     
-    //删除章节
-    static delChapter(cid,callback) {
-        var sql= 'DELETE FROM chapters WHERE cid = '+cid+'';
+    //添加章节
+    static addChapter(chapter,callback) {
+        var sql= 'INSERT IGNORE INTO chapters (chapterName,'+
+                    'chapterNO,'+
+                    'chapterSize,'+
+                    'chapterEditTime,'+ 
+                    'downloadUrl,'+ 
+                    'bid)'+
+                    'VALUES'+
+                    '("'+ chapter.chapterName +'",'+
+                    ''+ chapter.chapterNO +','+
+                    ''+ chapter.chapterSize +','+
+                    '"'+ chapter.chapterEditTime +'",'+
+                    '"'+ chapter.downloadUrl +'",'+
+                    '"'+ chapter.bid +'")'
         var r_data = {};
         dao(sql, function(err, result) {
             if(err){
                 r_data = {
-                    msg: '删除章节失败',
+                    msg: '保存章节失败',
                     code: '1000'
                 }
                 callback(r_data,err);
             }else{
                 r_data = {
-                    msg: '删除章节成功',
+                    msg: '保存章节成功',
                     code: '1001'
                 }
                 callback(r_data,err);   
             }
         });
+    }
+
+
+     //更新章节
+     static updateChapter(chapter,callback) {
+        var r_data = {};
+        
+        var sql= 'UPDATE chapters SET '+ 
+                'chapterName ="'+ chapter.chapterName +'",'+ 
+                'chapterNO ='+ chapter.chapterNO +','+
+                'chapterSize ='+ chapter.chapterSize +','+
+                'chapterEditTime = "'+ chapter.chapterEditTime+'",'+
+                'downloadUrl = "'+ chapter.downloadUrl+'"'+
+                'WHERE cid = '+ chapter.cid +'';
+        
+         dao(sql, function(err, result) {
+             if(err){
+                console.log(err);
+                r_data = {
+                    msg: '更新书籍失败',
+                    code: '1000'
+                }
+                 callback(r_data,err);
+             }else{
+                r_data = {
+                    obj: '',
+                    msg: '更新书籍成功',
+                    code: '1001'
+                }
+                callback(r_data,err);   
+             }
+         });
     }
 
      //删除章节

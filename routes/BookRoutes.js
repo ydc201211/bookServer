@@ -5,6 +5,7 @@ var setHead = require('../config/HeadConfig');
 var bookService = require('../service/BookService');
 var bookService = require('../service/BookService');
 var BSNManager = require('../util/BSNManager');
+var FileUtil = require('../util/FileUtil');
 
 // 响应一个JSON数据
 var responseJSON = function (res, ret) {
@@ -163,27 +164,77 @@ router.post('/chapter/delete', function(req, res, next){
     }
 });
 
-// 删除章节
+// 添加章节
 router.post('/chapter/add', function(req, res, next){
-    var chapterList = req.body;
-    var errInfo = '';
-    if(chapterList != null){
-        for(var i in chapterList){
-            console.log(chapterList[i].cid);
-            bookService.delChapter(chapterList[i].cid,function (ret,err) {
-                errInfo = err
+    //移动文件
+    var chapter = req.body;
+    var r_data = {};
+    var srcPath = '/public/tempFiles/'+ chapter.downloadUrl;
+    var desPath = '/public/files/'+ chapter.downloadUrl;
+    
+    var date = new Date();
+    var dateStr = date.getFullYear() +"-"+ 
+        (date.getMonth()+1)+ "-"+ date.getDate() + " " +
+        date.getHours()+":"+date.getMinutes()+":"+
+        date.getSeconds();
+    chapter.chapterEditTime = dateStr;
+    chapter.downloadUrl = desPath;
+    
+    if(FileUtil.fileTransfer(srcPath,desPath)){
+        if(chapter != null){
+            bookService.addChapter(chapter,function (ret,err){
+                responseJSON(res,ret);
             });
-            if(errInfo){
-                break;
+        }else{
+            
+            r_data = {
+                msg: '保存章节失败',
+                code: '1000'
             }
         }
-        var r_data = {
-            msg: '删除章节成功',
-            code: '1001'
+    }else{
+        r_data = {
+            msg: '保存章节失败',
+            code: '1000'
         }
         responseJSON(res,r_data);
+    }
+});
+
+// 编辑章节
+router.post('/chapter/update', function(req, res, next){
+    //移动文件
+    var chapter = req.body;
+    var r_data = {};
+    var srcPath = '/public/tempFiles/'+ chapter.downloadUrl;
+    var desPath = '/public/files/'+ chapter.downloadUrl;
+    
+    var date = new Date();
+    var dateStr = date.getFullYear() +"-"+ 
+        (date.getMonth()+1)+ "-"+ date.getDate() + " " +
+        date.getHours()+":"+date.getMinutes()+":"+
+        date.getSeconds();
+    chapter.chapterEditTime = dateStr;
+    chapter.downloadUrl = desPath;
+    
+    if(FileUtil.fileTransfer(srcPath,desPath)){
+        if(chapter != null){
+            bookService.updateChapter(chapter,function (ret,err){
+                responseJSON(res,ret);
+            });
+        }else{
+            
+            r_data = {
+                msg: '保存章节失败',
+                code: '1000'
+            }
+        }
     }else{
-        return;
+        r_data = {
+            msg: '保存章节失败',
+            code: '1000'
+        }
+        responseJSON(res,r_data);
     }
 });
 
